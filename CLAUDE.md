@@ -14,25 +14,44 @@ No test suite exists.
 
 ## Architecture
 
-Next.js 16 App Router, fully client-side — no server actions, no API routes, no database. All state lives in the browser.
+Next.js 16 App Router with server actions, API routes, and a persistent database.
+
+### Stack
+
+- **Database**: SQLite via [Turso](https://turso.tech) (or local SQLite in dev)
+- **ORM**: [Drizzle ORM](https://orm.drizzle.team) — schema defined in `db/schema.ts`, migrations in `db/migrations/`
+- **Auth**: Server-side via Next.js Server Actions — no credentials in `localStorage`
+- **Session**: Secure HTTP-only cookie (set by server action on login)
 
 ### Routes
 
 | Path | Purpose |
 |---|---|
 | `/` | Redirects to `/login` |
-| `/login` | Login + register tabs; redirects to `/calculator` on success |
-| `/calculator` | Main TPN calculator (auth-guarded) |
+| `/login` | Login + register tabs; calls server actions, redirects to `/calculator` on success |
+| `/calculator` | Main TPN calculator (auth-guarded via middleware or server-side session check) |
 | `/admin` | Admin panel with its own separate auth |
 
-### Auth model (`lib/auth.ts`)
+### Auth model
 
-- **Users** stored in `localStorage` (`tpn_users`) as a JSON array of `User` objects
-- **User session** stored in `sessionStorage` (`tpn_session`) — cleared on tab close
-- **Admin session** stored in `sessionStorage` (`tpn_admin`) — separate from user session
-- Admin credentials are hardcoded constants: `ADMIN_USERNAME` / `ADMIN_PASS_RAW`
+- **Users** stored in the database (`users` table) — not `localStorage`
+- **Session** stored in a secure HTTP-only cookie (e.g., via `iron-session` or `next-auth`)
+- **Admin session** separate cookie or role field on the `users` table
+- Admin credentials stored as environment variables, not hardcoded constants
 - New registrations have `status: 'pending'` until an admin approves them at `/admin`
-- The calculator page checks `getSession()` on mount and redirects to `/login` if absent
+- Auth logic lives in server actions (`app/actions/auth.ts`) — not `lib/auth.ts`
+
+### Database schema (`db/schema.ts`)
+
+Key tables:
+
+| Table | Columns |
+|---|---|
+| `users` | `id`, `username`, `password_hash`, `status`, `role`, `created_at` |
+| `calculations` | `id`, `user_id`, `mrn`, `inputs` (JSON), `results` (JSON), `created_at` |
+
+- Calculations are saved per patient MRN number, linked to the user who ran them
+- Passwords are hashed server-side (bcrypt or argon2) — never stored in plain text
 
 ### Calculation engine (`lib/calculations.ts`)
 

@@ -1,50 +1,59 @@
 'use client';
 import { useState, useEffect, KeyboardEvent } from 'react';
 import Image from 'next/image';
-import {
-  sha256, getUsers, saveUsers,
-  getAdminSession, setAdminSession, clearAdminSession,
-  ADMIN_USERNAME, ADMIN_PASS_RAW,
-} from '@/lib/auth';
+import { login, logout } from '@/app/actions/auth';
+import { getAdminData, setUserStatus } from '@/app/actions/admin';
 import type { User } from '@/lib/types';
 
 export default function AdminPage() {
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn]   = useState(false);
   const [adminUser, setAdminUser] = useState('');
-  const [aUser, setAUser] = useState('');
-  const [aPass, setAPass] = useState('');
-  const [aAlert, setAAlert] = useState('');
-  const [users, setUsers] = useState<User[]>([]);
+  const [aUser, setAUser]         = useState('');
+  const [aPass, setAPass]         = useState('');
+  const [aAlert, setAAlert]       = useState('');
+  const [aLoading, setALoading]   = useState(false);
+  const [users, setUsers]         = useState<User[]>([]);
 
   useEffect(() => {
-    const s = getAdminSession();
-    if (s) { setLoggedIn(true); setAdminUser(s.username); refresh(); }
+    getAdminData().then(data => {
+      if (data) { setLoggedIn(true); setAdminUser(data.username); setUsers(data.users); }
+    });
   }, []);
 
-  function refresh() { setUsers(getUsers()); }
+  async function refresh() {
+    const data = await getAdminData();
+    if (data) setUsers(data.users);
+  }
 
   async function doLogin() {
     if (!aUser || !aPass) return setAAlert('Please enter your username and password.');
-    if (aUser.toLowerCase() !== ADMIN_USERNAME) return setAAlert('Incorrect admin credentials.');
-    const entered  = await sha256(aPass);
-    const expected = await sha256(ADMIN_PASS_RAW);
-    if (entered !== expected) return setAAlert('Incorrect admin credentials.');
-    setAdminSession(aUser.toLowerCase());
-    setAdminUser(aUser.toLowerCase());
+    setALoading(true);
+    const result = await login(aUser, aPass);
+    if (result.error) { setALoading(false); return setAAlert(result.error); }
+    const data = await getAdminData();
+    setALoading(false);
+    if (!data) return setAAlert('This account does not have admin access.');
+    setAdminUser(data.username);
+    setUsers(data.users);
     setLoggedIn(true);
-    refresh();
   }
 
-  function doLogout() { clearAdminSession(); setLoggedIn(false); setAUser(''); setAPass(''); }
-
-  function approve(username: string) {
-    const updated = getUsers().map(u => u.username === username ? { ...u, status: 'approved' as const } : u);
-    saveUsers(updated); setUsers(updated);
+  async function doLogout() {
+    await logout();
+    setLoggedIn(false);
+    setAdminUser('');
+    setAUser('');
+    setAPass('');
   }
 
-  function reject(username: string) {
-    const updated = getUsers().map(u => u.username === username ? { ...u, status: 'rejected' as const } : u);
-    saveUsers(updated); setUsers(updated);
+  async function approve(userId: number) {
+    await setUserStatus(userId, 'approved');
+    await refresh();
+  }
+
+  async function reject(userId: number) {
+    await setUserStatus(userId, 'rejected');
+    await refresh();
   }
 
   function onKey(e: KeyboardEvent) { if (e.key === 'Enter' && !loggedIn) doLogin(); }
@@ -77,7 +86,9 @@ export default function AdminPage() {
           <label>Password</label>
           <input type="password" placeholder="Enter password" value={aPass} onChange={e => setAPass(e.target.value)} />
         </div>
-        <button className="btn-submit-purple" onClick={doLogin}>Sign In</button>
+        <button className="btn-submit-purple" onClick={doLogin} disabled={aLoading}>
+          {aLoading ? 'Signing in…' : 'Sign In'}
+        </button>
       </div>
 
       <p style={{ textAlign: 'center', marginTop: 16 }}>
@@ -104,8 +115,8 @@ export default function AdminPage() {
 
       {/* Stats */}
       <div className="stats-strip">
-        <div className="stat-box s-total"><div className="sv">{users.length}</div><div className="sl">Total Users</div></div>
-        <div className="stat-box s-pending"><div className="sv">{pending.length}</div><div className="sl">Pending</div></div>
+        <div className="stat-box s-total">  <div className="sv">{users.length}</div>   <div className="sl">Total Users</div></div>
+        <div className="stat-box s-pending"><div className="sv">{pending.length}</div>  <div className="sl">Pending</div></div>
         <div className="stat-box s-approved"><div className="sv">{approved.length}</div><div className="sl">Approved</div></div>
         <div className="stat-box s-rejected"><div className="sv">{rejected.length}</div><div className="sl">Rejected</div></div>
       </div>
@@ -123,14 +134,14 @@ export default function AdminPage() {
             <thead><tr><th>Full Name</th><th>Username</th><th>Registered</th><th>Actions</th></tr></thead>
             <tbody>
               {pending.map(u => (
-                <tr key={u.username}>
+                <tr key={u.id}>
                   <td><strong>{u.name}</strong></td>
                   <td><code style={{ fontSize: 12, color: '#4b5563' }}>{u.username}</code></td>
-                  <td className="date-cell">{u.registeredAt || '—'}</td>
+                  <td className="date-cell">{u.createdAt ? new Date(u.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}</td>
                   <td>
                     <div className="action-btns">
-                      <button className="btn-approve" onClick={() => approve(u.username)}>✓ Approve</button>
-                      <button className="btn-reject"  onClick={() => reject(u.username)}>✗ Reject</button>
+                      <button className="btn-approve" onClick={() => approve(u.id)}>✓ Approve</button>
+                      <button className="btn-reject"  onClick={() => reject(u.id)}>✗ Reject</button>
                     </div>
                   </td>
                 </tr>
@@ -155,16 +166,16 @@ export default function AdminPage() {
               {users.map(u => {
                 const st = u.status || 'approved';
                 return (
-                  <tr key={u.username}>
+                  <tr key={u.id}>
                     <td><strong>{u.name}</strong></td>
                     <td><code style={{ fontSize: 12, color: '#4b5563' }}>{u.username}</code></td>
                     <td><span className={`status-pill ${st}`}>{st.charAt(0).toUpperCase() + st.slice(1)}</span></td>
-                    <td className="date-cell">{u.registeredAt || '—'}</td>
+                    <td className="date-cell">{u.createdAt ? new Date(u.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '—'}</td>
                     <td>
                       <div className="action-btns">
-                        {st === 'pending'  && <><button className="btn-approve" onClick={() => approve(u.username)}>✓ Approve</button><button className="btn-reject" onClick={() => reject(u.username)}>✗ Reject</button></>}
-                        {st === 'approved' && <button className="btn-revoke"  onClick={() => reject(u.username)}>⊘ Revoke</button>}
-                        {st === 'rejected' && <button className="btn-restore" onClick={() => approve(u.username)}>↩ Restore</button>}
+                        {st === 'pending'  && <><button className="btn-approve" onClick={() => approve(u.id)}>✓ Approve</button><button className="btn-reject" onClick={() => reject(u.id)}>✗ Reject</button></>}
+                        {st === 'approved' && <button className="btn-revoke"  onClick={() => reject(u.id)}>⊘ Revoke</button>}
+                        {st === 'rejected' && <button className="btn-restore" onClick={() => approve(u.id)}>↩ Restore</button>}
                       </div>
                     </td>
                   </tr>

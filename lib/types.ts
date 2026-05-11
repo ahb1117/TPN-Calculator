@@ -1,14 +1,17 @@
 export interface User {
+  id: number;
   name: string;
   username: string;
-  hash: string;
   status: 'pending' | 'approved' | 'rejected';
-  registeredAt?: string;
+  role: 'user' | 'admin';
+  createdAt: string;
 }
 
 export interface Session {
+  userId: number;
   name: string;
   username: string;
+  role: 'user' | 'admin';
 }
 
 export interface TPNInputs {

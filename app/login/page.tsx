@@ -1,8 +1,8 @@
 'use client';
-import { useEffect, useState, KeyboardEvent } from 'react';
+import { useState, KeyboardEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { sha256, getUsers, saveUsers, getSession, setSession } from '@/lib/auth';
+import { login, register } from '@/app/actions/auth';
 
 type Tab = 'login' | 'register';
 type AlertType = 'error' | 'success' | '';
@@ -15,6 +15,7 @@ export default function LoginPage() {
   const [lUser, setLUser] = useState('');
   const [lPass, setLPass] = useState('');
   const [lAlert, setLAlert] = useState<{ msg: string; type: AlertType }>({ msg: '', type: '' });
+  const [lLoading, setLLoading] = useState(false);
 
   // register fields
   const [rName, setRName] = useState('');
@@ -22,10 +23,7 @@ export default function LoginPage() {
   const [rPass, setRPass] = useState('');
   const [rPass2, setRPass2] = useState('');
   const [rAlert, setRAlert] = useState<{ msg: string; type: AlertType }>({ msg: '', type: '' });
-
-  useEffect(() => {
-    if (getSession()) router.replace('/calculator');
-  }, [router]);
+  const [rLoading, setRLoading] = useState(false);
 
   function switchTab(t: Tab) {
     setTab(t);
@@ -35,27 +33,19 @@ export default function LoginPage() {
 
   async function doLogin() {
     if (!lUser || !lPass) return setLAlert({ msg: 'Please enter your username and password.', type: 'error' });
-    const users = getUsers();
-    const hash  = await sha256(lPass);
-    const found = users.find(u => u.username === lUser.toLowerCase() && u.hash === hash);
-    if (!found) return setLAlert({ msg: 'Incorrect username or password.', type: 'error' });
-    if (found.status === 'pending')  return setLAlert({ msg: 'Your account is awaiting admin approval. Please check back later.', type: 'error' });
-    if (found.status === 'rejected') return setLAlert({ msg: 'Your registration was not approved. Please contact the administrator.', type: 'error' });
-    setSession({ name: found.name, username: found.username });
+    setLLoading(true);
+    const result = await login(lUser, lPass);
+    setLLoading(false);
+    if (result.error) return setLAlert({ msg: result.error, type: 'error' });
     router.replace('/calculator');
   }
 
   async function doRegister() {
-    if (!rName)           return setRAlert({ msg: 'Full name is required.', type: 'error' });
-    if (!rUser)           return setRAlert({ msg: 'Username is required.', type: 'error' });
-    if (rPass.length < 6) return setRAlert({ msg: 'Password must be at least 6 characters.', type: 'error' });
     if (rPass !== rPass2) return setRAlert({ msg: 'Passwords do not match.', type: 'error' });
-    const users = getUsers();
-    if (users.find(u => u.username === rUser.toLowerCase())) return setRAlert({ msg: 'Username already exists.', type: 'error' });
-    const hash = await sha256(rPass);
-    const registeredAt = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-    users.push({ name: rName, username: rUser.toLowerCase(), hash, status: 'pending', registeredAt });
-    saveUsers(users);
+    setRLoading(true);
+    const result = await register(rName, rUser, rPass);
+    setRLoading(false);
+    if (result.error) return setRAlert({ msg: result.error, type: 'error' });
     setRAlert({ msg: 'Registration submitted! You will be able to sign in once an admin approves your account.', type: 'success' });
     setRName(''); setRUser(''); setRPass(''); setRPass2('');
     setTimeout(() => switchTab('login'), 2000);
@@ -96,7 +86,9 @@ export default function LoginPage() {
               <label>Password</label>
               <input type="password" placeholder="Enter your password" autoComplete="current-password" value={lPass} onChange={e => setLPass(e.target.value)} />
             </div>
-            <button className="btn-submit-blue" onClick={doLogin}>Sign In</button>
+            <button className="btn-submit-blue" onClick={doLogin} disabled={lLoading}>
+              {lLoading ? 'Signing in…' : 'Sign In'}
+            </button>
             <div className="switch-link">
               Don&apos;t have an account? <button onClick={() => switchTab('register')}>Register</button>
             </div>
@@ -123,7 +115,9 @@ export default function LoginPage() {
               <label>Confirm Password</label>
               <input type="password" placeholder="Repeat password" autoComplete="new-password" value={rPass2} onChange={e => setRPass2(e.target.value)} />
             </div>
-            <button className="btn-submit-blue" onClick={doRegister}>Create Account</button>
+            <button className="btn-submit-blue" onClick={doRegister} disabled={rLoading}>
+              {rLoading ? 'Creating account…' : 'Create Account'}
+            </button>
             <div className="switch-link">
               Already have an account? <button onClick={() => switchTab('login')}>Sign In</button>
             </div>

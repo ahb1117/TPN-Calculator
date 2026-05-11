@@ -5,7 +5,8 @@ import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { calculate, fmt } from '@/lib/calculations';
 import type { TPNData } from '@/lib/types';
-import { getSession, clearSession } from '@/lib/auth';
+import { getCurrentUser, logout } from '@/app/actions/auth';
+import { saveCalculation } from '@/app/actions/calculations';
 import AspenModal from '@/components/AspenModal';
 import OrderTableModal from '@/components/OrderTableModal';
 
@@ -17,11 +18,11 @@ export default function CalculatorPage() {
   const router = useRouter();
 
   // Macro inputs
-  const [weight, setWeight]   = useState('');
-  const [fluid,  setFluid]    = useState('');
-  const [aa,     setAa]       = useState('');
-  const [il,     setIl]       = useState('');
-  const [gir,    setGir]      = useState('');
+  const [weight, setWeight] = useState('');
+  const [fluid,  setFluid]  = useState('');
+  const [aa,     setAa]     = useState('');
+  const [il,     setIl]     = useState('');
+  const [gir,    setGir]    = useState('');
 
   // Electrolyte inputs
   const [nacl, setNacl] = useState('');
@@ -33,22 +34,31 @@ export default function CalculatorPage() {
   const [phos, setPhos] = useState('');
   const [mg,   setMg]   = useState('');
 
-  // Modals & results
-  const [aspenOpen,     setAspenOpen]     = useState(false);
-  const [dashOpen,      setDashOpen]      = useState(false);
-  const [orderOpen,     setOrderOpen]     = useState(false);
-  const [result,        setResult]        = useState<TPNData | null>(null);
-  const [userName,      setUserName]      = useState('');
+  // Patient MRN
+  const [mrn, setMrn] = useState('');
 
-  // Auth guard
+  // Modals & results
+  const [aspenOpen, setAspenOpen] = useState(false);
+  const [dashOpen,  setDashOpen]  = useState(false);
+  const [orderOpen, setOrderOpen] = useState(false);
+  const [result,    setResult]    = useState<TPNData | null>(null);
+  const [userName,  setUserName]  = useState('');
+
+  // Save state
+  type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
+  const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle');
+  const [saveMsg,    setSaveMsg]    = useState('');
+
+  // Auth guard — reads server session
   useEffect(() => {
-    const session = getSession();
-    if (!session) { router.replace('/login'); return; }
-    setUserName(session.name);
+    getCurrentUser().then(user => {
+      if (!user) { router.replace('/login'); return; }
+      setUserName(user.name);
+    });
   }, [router]);
 
-  function handleLogout() {
-    clearSession();
+  async function handleLogout() {
+    await logout();
     router.replace('/login');
   }
 
@@ -62,17 +72,17 @@ export default function CalculatorPage() {
   });
 
   function doCalculate() {
-    const W       = parseFloat(weight);
-    const fluidV  = parseFloat(fluid);
-    const aaDose  = parseFloat(aa);
-    const ilDose  = parseFloat(il);
-    const girV    = parseFloat(gir);
+    const W      = parseFloat(weight);
+    const fluidV = parseFloat(fluid);
+    const aaDose = parseFloat(aa);
+    const ilDose = parseFloat(il);
+    const girV   = parseFloat(gir);
 
-    if (isNaN(W) || W <= 0)                              return alert('Please enter a valid birth weight.');
-    if (isNaN(fluidV) || fluidV <= 0)                    return alert('Please enter a valid total fluid intake.');
-    if (isNaN(aaDose) || aaDose < 0.5 || aaDose > 4)    return alert('Amino acid dose must be between 0.5 and 4 g/kg/day.');
-    if (isNaN(ilDose) || ilDose < 1 || ilDose > 3)      return alert('Intralipid dose must be between 1 and 3 g/kg/day.');
-    if (isNaN(girV)   || girV <= 0)                      return alert('Please enter a valid Glucose Infusion Rate.');
+    if (isNaN(W) || W <= 0)                           return alert('Please enter a valid birth weight.');
+    if (isNaN(fluidV) || fluidV <= 0)                 return alert('Please enter a valid total fluid intake.');
+    if (isNaN(aaDose) || aaDose < 0.5 || aaDose > 4) return alert('Amino acid dose must be between 0.5 and 4 g/kg/day.');
+    if (isNaN(ilDose) || ilDose < 1   || ilDose > 3) return alert('Intralipid dose must be between 1 and 3 g/kg/day.');
+    if (isNaN(girV)   || girV <= 0)                   return alert('Please enter a valid Glucose Infusion Rate.');
 
     const data = calculate({
       W, fluid: fluidV, AA_DOSE: aaDose, IL_DOSE: ilDose, gir: girV,
@@ -81,7 +91,22 @@ export default function CalculatorPage() {
       ca:   n(ca),   phos: n(phos), mg: n(mg),
     });
     setResult(data);
+    setSaveStatus('idle');
     setTimeout(() => document.getElementById('results')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+  }
+
+  async function handleSave() {
+    if (!result) return;
+    setSaveStatus('saving');
+    const r = await saveCalculation(mrn, result);
+    if (r.error) {
+      setSaveStatus('error');
+      setSaveMsg(r.error);
+    } else {
+      setSaveStatus('saved');
+      setSaveMsg('Calculation saved successfully.');
+    }
+    setTimeout(() => setSaveStatus('idle'), 4000);
   }
 
   const girStatus = result
@@ -90,7 +115,6 @@ export default function CalculatorPage() {
     : { label: '✓ Within target range', cls: 'ok' }
     : null;
 
-  // Electrolyte rows for results table
   const elecRows = result ? [
     { group: 'Sodium' },
     { label: 'Sodium Chloride (NaCl)',  dose: result.nacl, total: result.nacl * result.W, unit: 'mEq' },
@@ -140,6 +164,22 @@ export default function CalculatorPage() {
       {/* Macronutrients card */}
       <div className="card">
         <h2>Macronutrients &amp; Fluids</h2>
+
+        {/* Patient MRN */}
+        <div className="input-row" style={{ marginBottom: 8 }}>
+          <div className="field">
+            <label>Patient MRN</label>
+            <input
+              type="text"
+              placeholder="e.g. 1234567"
+              value={mrn}
+              onChange={e => setMrn(e.target.value)}
+              style={{ textTransform: 'uppercase' }}
+            />
+            <span className="unit">required to save</span>
+          </div>
+        </div>
+
         <div className="input-row">
           <div className="field">
             <label>Birth Weight</label>
@@ -215,11 +255,11 @@ export default function CalculatorPage() {
           <div className="card">
             <h2>Summary</h2>
             <div className="summary-grid">
-              <div className="summary-box blue"><div className="val">{fmt(result.totalVol, 1)}</div><div className="lbl">Total Volume (ml/day)</div></div>
-              <div className="summary-box green"><div className="val">{fmt(result.aaGrams, 1)}</div><div className="lbl">Amino Acid (g/day)</div></div>
-              <div className="summary-box amber"><div className="val">{fmt(result.ilGrams, 1)}</div><div className="lbl">Intralipid (g/day)</div></div>
-              <div className="summary-box purple"><div className="val">{fmt(result.dxGrams, 2)}</div><div className="lbl">Dextrose (g/day)</div></div>
-              <div className="summary-box red"><div className="val">{fmt(result.calTot, 0)}</div><div className="lbl">Total kcal/day</div></div>
+              <div className="summary-box blue">  <div className="val">{fmt(result.totalVol, 1)}</div><div className="lbl">Total Volume (ml/day)</div></div>
+              <div className="summary-box green">  <div className="val">{fmt(result.aaGrams, 1)}</div> <div className="lbl">Amino Acid (g/day)</div></div>
+              <div className="summary-box amber">  <div className="val">{fmt(result.ilGrams, 1)}</div> <div className="lbl">Intralipid (g/day)</div></div>
+              <div className="summary-box purple"> <div className="val">{fmt(result.dxGrams, 2)}</div><div className="lbl">Dextrose (g/day)</div></div>
+              <div className="summary-box red">    <div className="val">{fmt(result.calTot, 0)}</div> <div className="lbl">Total kcal/day</div></div>
             </div>
 
             <div className="gir-block">
@@ -237,13 +277,27 @@ export default function CalculatorPage() {
             </div>
 
             <div className="rate-strip">
-              <div className="rate-chip"><div className="chip-val">{fmt(result.totalHr, 2)}</div><div className="chip-lbl">Total (ml/hr)</div></div>
+              <div className="rate-chip"><div className="chip-val">{fmt(result.totalHr, 2)}</div>   <div className="chip-lbl">Total (ml/hr)</div></div>
               <div className="rate-chip"><div className="chip-val">{fmt(result.combinedHr, 2)}</div><div className="chip-lbl">TPN Volume (ml/hr)</div></div>
-              <div className="rate-chip"><div className="chip-val">{fmt(result.ilHr, 2)}</div><div className="chip-lbl">Intralipid (ml/hr)</div></div>
+              <div className="rate-chip"><div className="chip-val">{fmt(result.ilHr, 2)}</div>      <div className="chip-lbl">Intralipid (ml/hr)</div></div>
             </div>
 
-            <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginTop: 16 }}>
-              <button className="btn-dashboard" onClick={() => setDashOpen(true)}>📊 Dashboard</button>
+            {/* Action buttons + Save */}
+            <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginTop: 16, flexWrap: 'wrap', alignItems: 'center' }}>
+              {saveStatus !== 'idle' && (
+                <span style={{ fontSize: 13, color: saveStatus === 'saved' ? '#15803d' : saveStatus === 'error' ? '#dc2626' : '#6b7280', marginRight: 8 }}>
+                  {saveStatus === 'saving' ? 'Saving…' : saveMsg}
+                </span>
+              )}
+              <button
+                className="btn-ordertable"
+                onClick={handleSave}
+                disabled={saveStatus === 'saving'}
+                style={{ background: '#15803d', borderColor: '#15803d' }}
+              >
+                💾 Save to MRN
+              </button>
+              <button className="btn-dashboard"  onClick={() => setDashOpen(true)}>📊 Dashboard</button>
               <button className="btn-ordertable" onClick={() => setOrderOpen(true)}>📋 Order Table</button>
             </div>
           </div>
