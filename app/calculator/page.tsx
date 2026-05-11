@@ -1,11 +1,13 @@
 'use client';
 import { useState, useEffect, KeyboardEvent } from 'react';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import { calculate, fmt } from '@/lib/calculations';
 import type { TPNData } from '@/lib/types';
 import AspenModal from '@/components/AspenModal';
-import DashboardModal from '@/components/DashboardModal';
 import OrderTableModal from '@/components/OrderTableModal';
+
+const DashboardModal = dynamic(() => import('@/components/DashboardModal'), { ssr: false });
 
 function n(v: string) { const x = parseFloat(v); return isNaN(x) ? 0 : x; }
 
