@@ -23,6 +23,25 @@ export async function saveCalculation(mrn: string, data: TPNData): Promise<{ err
   return { success: true };
 }
 
+export async function getAllCalculations() {
+  const session = await getSession();
+  if (!session.userId) return [];
+
+  const rows = await db
+    .select()
+    .from(calculations)
+    .where(eq(calculations.userId, session.userId))
+    .orderBy(desc(calculations.createdAt));
+
+  return rows.map(r => ({
+    id: r.id,
+    mrn: r.mrn,
+    inputs: JSON.parse(r.inputs) as TPNInputs,
+    results: JSON.parse(r.results) as TPNData,
+    createdAt: r.createdAt,
+  }));
+}
+
 export async function getCalculationsByMRN(mrn: string) {
   const session = await getSession();
   if (!session.userId) return [];

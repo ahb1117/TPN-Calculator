@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const sessionCookie = req.cookies.get('tpn_session');
   if (!sessionCookie?.value) {
     return NextResponse.redirect(new URL('/login', req.url));
@@ -9,5 +9,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/calculator/:path*'],
+  matcher: ['/calculator/:path*', '/history/:path*'],
 };
