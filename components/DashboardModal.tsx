@@ -5,6 +5,7 @@ import { fmt } from '@/lib/calculations';
 import {
   Chart as ChartJS,
   CategoryScale, LinearScale,
+  BarController, LineController,
   BarElement, LineElement, PointElement,
   Title, Tooltip, Legend,
 } from 'chart.js';
@@ -13,6 +14,7 @@ import { Bar, Chart } from 'react-chartjs-2';
 
 ChartJS.register(
   CategoryScale, LinearScale,
+  BarController, LineController,
   BarElement, LineElement, PointElement,
   Title, Tooltip, Legend,
   ChartDataLabels,
