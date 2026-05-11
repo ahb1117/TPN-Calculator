@@ -7,20 +7,25 @@ import bcrypt from 'bcryptjs';
 import { getSession } from '@/lib/session';
 
 export async function login(username: string, password: string): Promise<{ error?: string }> {
-  const user = await db.query.users.findFirst({ where: eq(users.username, username.toLowerCase().trim()) });
-  if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
-    return { error: 'Incorrect username or password.' };
-  }
-  if (user.status === 'pending')  return { error: 'Your account is awaiting admin approval. Please check back later.' };
-  if (user.status === 'rejected') return { error: 'Your registration was not approved. Please contact the administrator.' };
+  try {
+    const user = await db.query.users.findFirst({ where: eq(users.username, username.toLowerCase().trim()) });
+    if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
+      return { error: 'Incorrect username or password.' };
+    }
+    if (user.status === 'pending')  return { error: 'Your account is awaiting admin approval. Please check back later.' };
+    if (user.status === 'rejected') return { error: 'Your registration was not approved. Please contact the administrator.' };
 
-  const session = await getSession();
-  session.userId   = user.id;
-  session.username = user.username;
-  session.name     = user.name;
-  session.role     = user.role as 'user' | 'admin';
-  await session.save();
-  return {};
+    const session = await getSession();
+    session.userId   = user.id;
+    session.username = user.username;
+    session.name     = user.name;
+    session.role     = user.role as 'user' | 'admin';
+    await session.save();
+    return {};
+  } catch (e) {
+    console.error('Login error:', e);
+    return { error: 'A server error occurred. Please try again.' };
+  }
 }
 
 export async function register(name: string, username: string, password: string): Promise<{ error?: string }> {

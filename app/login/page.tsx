@@ -34,21 +34,31 @@ export default function LoginPage() {
   async function doLogin() {
     if (!lUser || !lPass) return setLAlert({ msg: 'Please enter your username and password.', type: 'error' });
     setLLoading(true);
-    const result = await login(lUser, lPass);
-    setLLoading(false);
-    if (result.error) return setLAlert({ msg: result.error, type: 'error' });
-    router.replace('/calculator');
+    try {
+      const result = await login(lUser, lPass);
+      if (result.error) return setLAlert({ msg: result.error, type: 'error' });
+      router.replace('/calculator');
+    } catch {
+      setLAlert({ msg: 'A server error occurred. Please try again.', type: 'error' });
+    } finally {
+      setLLoading(false);
+    }
   }
 
   async function doRegister() {
     if (rPass !== rPass2) return setRAlert({ msg: 'Passwords do not match.', type: 'error' });
     setRLoading(true);
-    const result = await register(rName, rUser, rPass);
-    setRLoading(false);
-    if (result.error) return setRAlert({ msg: result.error, type: 'error' });
-    setRAlert({ msg: 'Registration submitted! You will be able to sign in once an admin approves your account.', type: 'success' });
-    setRName(''); setRUser(''); setRPass(''); setRPass2('');
-    setTimeout(() => switchTab('login'), 2000);
+    try {
+      const result = await register(rName, rUser, rPass);
+      if (result.error) return setRAlert({ msg: result.error, type: 'error' });
+      setRAlert({ msg: 'Registration submitted! You will be able to sign in once an admin approves your account.', type: 'success' });
+      setRName(''); setRUser(''); setRPass(''); setRPass2('');
+      setTimeout(() => switchTab('login'), 2000);
+    } catch {
+      setRAlert({ msg: 'A server error occurred. Please try again.', type: 'error' });
+    } finally {
+      setRLoading(false);
+    }
   }
 
   function onKey(e: KeyboardEvent) {
