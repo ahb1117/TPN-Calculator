@@ -1,9 +1,11 @@
 'use client';
 import { useState, useEffect, KeyboardEvent } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { calculate, fmt } from '@/lib/calculations';
 import type { TPNData } from '@/lib/types';
+import { getSession, clearSession } from '@/lib/auth';
 import AspenModal from '@/components/AspenModal';
 import OrderTableModal from '@/components/OrderTableModal';
 
@@ -12,6 +14,8 @@ const DashboardModal = dynamic(() => import('@/components/DashboardModal'), { ss
 function n(v: string) { const x = parseFloat(v); return isNaN(x) ? 0 : x; }
 
 export default function CalculatorPage() {
+  const router = useRouter();
+
   // Macro inputs
   const [weight, setWeight]   = useState('');
   const [fluid,  setFluid]    = useState('');
@@ -34,6 +38,19 @@ export default function CalculatorPage() {
   const [dashOpen,      setDashOpen]      = useState(false);
   const [orderOpen,     setOrderOpen]     = useState(false);
   const [result,        setResult]        = useState<TPNData | null>(null);
+  const [userName,      setUserName]      = useState('');
+
+  // Auth guard
+  useEffect(() => {
+    const session = getSession();
+    if (!session) { router.replace('/login'); return; }
+    setUserName(session.name);
+  }, [router]);
+
+  function handleLogout() {
+    clearSession();
+    router.replace('/login');
+  }
 
   useEffect(() => {
     function handleKey(e: globalThis.KeyboardEvent) {
@@ -98,6 +115,14 @@ export default function CalculatorPage() {
 
   return (
     <div style={{ padding: '24px 16px 48px' }}>
+      {/* User bar */}
+      {userName && (
+        <div className="auth-bar">
+          <span className="user-chip">👤 {userName}</span>
+          <button className="btn-logout" onClick={handleLogout}>Sign out</button>
+        </div>
+      )}
+
       {/* Header */}
       <header className="site-header">
         <div className="logo-row">
