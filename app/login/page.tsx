@@ -75,7 +75,7 @@ export default function LoginPage() {
           <Image src="/1.png" alt="Alahsa Health Cluster" width={120} height={56} style={{ objectFit: 'contain', height: 56, width: 'auto' }} />
           <Image src="/2.png" alt="King Faisal General Hospital" width={120} height={56} style={{ objectFit: 'contain', height: 56, width: 'auto' }} />
         </div>
-        <div className="badge badge-blue">Neonatology Tool</div>
+        <a href="/" className="badge badge-blue" style={{ textDecoration: 'none', cursor: 'pointer' }}>Neonatology Tool</a>
         <h1>Neonatal TPN Calculator</h1>
         <p>Please sign in to continue</p>
       </header>

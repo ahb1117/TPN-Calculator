@@ -70,7 +70,7 @@ export default function HistoryPage() {
           <Image src="/1.png" alt="Alahsa Health Cluster" width={120} height={56} style={{ objectFit: 'contain', height: 56, width: 'auto' }} />
           <Image src="/2.png" alt="King Faisal General Hospital" width={120} height={56} style={{ objectFit: 'contain', height: 56, width: 'auto' }} />
         </div>
-        <div className="badge badge-blue">Neonatology Tool</div>
+        <a href="/" className="badge badge-blue" style={{ textDecoration: 'none', cursor: 'pointer' }}>Neonatology Tool</a>
         <h1>TPN History</h1>
         <p>Search by MRN to view saved TPN orders</p>
       </header>

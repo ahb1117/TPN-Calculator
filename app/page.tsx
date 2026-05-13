@@ -1,11 +1,8 @@
-'use client';
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { redirect } from 'next/navigation';
+import { getSession } from '@/lib/session';
 
-export default function Home() {
-  const router = useRouter();
-  useEffect(() => {
-    router.replace('/login');
-  }, [router]);
-  return null;
+export default async function Home() {
+  const session = await getSession();
+  if (session.userId) redirect('/calculator');
+  redirect('/login');
 }

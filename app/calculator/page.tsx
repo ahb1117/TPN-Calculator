@@ -154,7 +154,7 @@ export default function CalculatorPage() {
           <Image src="/1.png" alt="Alahsa Health Cluster" width={120} height={64} style={{ objectFit: 'contain', height: 64, width: 'auto' }} />
           <Image src="/2.png" alt="King Faisal General Hospital" width={120} height={64} style={{ objectFit: 'contain', height: 64, width: 'auto' }} />
         </div>
-        <div className="badge badge-blue">Neonatology Tool</div>
+        <a href="/" className="badge badge-blue" style={{ textDecoration: 'none', cursor: 'pointer' }}>Neonatology Tool</a>
         <h1>Neonatal TPN Calculator</h1>
         <p>Preterm &amp; Term Newborn &nbsp;·&nbsp; Parenteral Nutrition</p>
         <div style={{ marginTop: 12 }}>
