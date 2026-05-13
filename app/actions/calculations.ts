@@ -2,7 +2,7 @@
 
 import { db } from '@/db';
 import { calculations } from '@/db/schema';
-import { and, eq, desc } from 'drizzle-orm';
+import { eq, desc } from 'drizzle-orm';
 import { getSession } from '@/lib/session';
 import type { TPNData, TPNInputs } from '@/lib/types';
 
@@ -30,7 +30,6 @@ export async function getAllCalculations() {
   const rows = await db
     .select()
     .from(calculations)
-    .where(eq(calculations.userId, session.userId))
     .orderBy(desc(calculations.createdAt));
 
   return rows.map(r => ({
@@ -49,7 +48,7 @@ export async function getCalculationsByMRN(mrn: string) {
   const rows = await db
     .select()
     .from(calculations)
-    .where(and(eq(calculations.mrn, mrn.trim().toUpperCase()), eq(calculations.userId, session.userId)))
+    .where(eq(calculations.mrn, mrn.trim().toUpperCase()))
     .orderBy(desc(calculations.createdAt));
 
   return rows.map(r => ({
