@@ -163,7 +163,10 @@ export default function LoginPage() {
         )}
       </div>
 
-      <p style={{ textAlign: 'center', marginTop: 14 }}>
+      <p style={{ textAlign: 'center', marginTop: 14, display: 'flex', justifyContent: 'center', gap: 20 }}>
+        <a href="/tutorial" style={{ fontSize: 11, color: '#6b7280', textDecoration: 'none', borderBottom: '1px dashed #d1d5db' }}>
+          ❓ How to use
+        </a>
         <a href="/admin" style={{ fontSize: 11, color: '#9ca3af', textDecoration: 'none', borderBottom: '1px dashed #d1d5db' }}>
           Admin Panel
         </a>

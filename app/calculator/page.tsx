@@ -144,6 +144,7 @@ export default function CalculatorPage() {
         <div className="auth-bar">
           <span className="user-chip">👤 {userName}</span>
           <a href="/history" style={{ fontSize: 12, color: '#6b7280', textDecoration: 'none', borderBottom: '1px dashed #d1d5db' }}>📋 History</a>
+          <a href="/tutorial" style={{ fontSize: 12, color: '#6b7280', textDecoration: 'none', borderBottom: '1px dashed #d1d5db' }}>❓ How to use</a>
           <button className="btn-logout" onClick={handleLogout}>Sign out</button>
         </div>
       )}
