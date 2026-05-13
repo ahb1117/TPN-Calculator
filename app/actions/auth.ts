@@ -41,7 +41,7 @@ export async function register(name: string, username: string, password: string)
     name: name.trim(),
     username: username.toLowerCase().trim(),
     passwordHash,
-    status: 'active',
+    status: 'approved',
     role: 'user',
   }).returning();
 
