@@ -22,6 +22,8 @@ export default function LoginPage() {
   const [rUser, setRUser] = useState('');
   const [rPass, setRPass] = useState('');
   const [rPass2, setRPass2] = useState('');
+  const [rAgree1, setRAgree1] = useState(false);
+  const [rAgree2, setRAgree2] = useState(false);
   const [rAlert, setRAlert] = useState<{ msg: string; type: AlertType }>({ msg: '', type: '' });
   const [rLoading, setRLoading] = useState(false);
 
@@ -47,6 +49,8 @@ export default function LoginPage() {
 
   async function doRegister() {
     if (rPass !== rPass2) return setRAlert({ msg: 'Passwords do not match.', type: 'error' });
+    if (!rAgree1) return setRAlert({ msg: 'You must confirm you are trained in neonatal parenteral nutrition.', type: 'error' });
+    if (!rAgree2) return setRAlert({ msg: 'You must accept the calculator disclaimer before registering.', type: 'error' });
     setRLoading(true);
     try {
       const result = await register(rName, rUser, rPass);
@@ -123,7 +127,33 @@ export default function LoginPage() {
               <label>Confirm Password</label>
               <input type="password" placeholder="Repeat password" autoComplete="new-password" value={rPass2} onChange={e => setRPass2(e.target.value)} />
             </div>
-            <button className="btn-submit-blue" onClick={doRegister} disabled={rLoading}>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10, margin: '14px 0' }}>
+              <label style={{ display: 'flex', alignItems: 'flex-start', gap: 10, cursor: 'pointer', fontSize: 13, color: '#374151', lineHeight: 1.5 }}>
+                <input
+                  type="checkbox"
+                  checked={rAgree1}
+                  onChange={e => setRAgree1(e.target.checked)}
+                  style={{ marginTop: 2, accentColor: '#1a6fc4', width: 16, height: 16, flexShrink: 0, cursor: 'pointer' }}
+                />
+                <span>
+                  I confirm that I am trained and competent in writing <strong>neonatal parenteral nutrition</strong> orders.
+                </span>
+              </label>
+              <label style={{ display: 'flex', alignItems: 'flex-start', gap: 10, cursor: 'pointer', fontSize: 13, color: '#374151', lineHeight: 1.5 }}>
+                <input
+                  type="checkbox"
+                  checked={rAgree2}
+                  onChange={e => setRAgree2(e.target.checked)}
+                  style={{ marginTop: 2, accentColor: '#1a6fc4', width: 16, height: 16, flexShrink: 0, cursor: 'pointer' }}
+                />
+                <span>
+                  I understand that I am using this calculator <strong>at my own risk</strong> and will always independently verify all calculations before clinical use.
+                </span>
+              </label>
+            </div>
+
+            <button className="btn-submit-blue" onClick={doRegister} disabled={rLoading || !rAgree1 || !rAgree2}>
               {rLoading ? 'Creating account…' : 'Create Account'}
             </button>
             <div className="switch-link">
