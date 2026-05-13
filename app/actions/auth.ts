@@ -37,13 +37,20 @@ export async function register(name: string, username: string, password: string)
   if (existing) return { error: 'Username already exists.' };
 
   const passwordHash = await bcrypt.hash(password, 10);
-  await db.insert(users).values({
+  const [newUser] = await db.insert(users).values({
     name: name.trim(),
     username: username.toLowerCase().trim(),
     passwordHash,
-    status: 'pending',
+    status: 'active',
     role: 'user',
-  });
+  }).returning();
+
+  const session = await getSession();
+  session.userId   = newUser.id;
+  session.username = newUser.username;
+  session.name     = newUser.name;
+  session.role     = 'user';
+  await session.save();
   return {};
 }
 

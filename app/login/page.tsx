@@ -51,9 +51,7 @@ export default function LoginPage() {
     try {
       const result = await register(rName, rUser, rPass);
       if (result.error) return setRAlert({ msg: result.error, type: 'error' });
-      setRAlert({ msg: 'Registration submitted! You will be able to sign in once an admin approves your account.', type: 'success' });
-      setRName(''); setRUser(''); setRPass(''); setRPass2('');
-      setTimeout(() => switchTab('login'), 2000);
+      router.push('/calculator');
     } catch {
       setRAlert({ msg: 'A server error occurred. Please try again.', type: 'error' });
     } finally {
