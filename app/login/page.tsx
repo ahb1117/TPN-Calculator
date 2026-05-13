@@ -153,7 +153,7 @@ export default function LoginPage() {
               </label>
             </div>
 
-            <button className="btn-submit-blue" onClick={doRegister} disabled={rLoading || !rAgree1 || !rAgree2}>
+            <button className="btn-submit-blue" onClick={doRegister} disabled={rLoading}>
               {rLoading ? 'Creating account…' : 'Create Account'}
             </button>
             <div className="switch-link">
