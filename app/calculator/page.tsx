@@ -132,9 +132,9 @@ export default function CalculatorPage() {
   ] : [];
 
   const calItems = result ? [
-    { name: 'Amino Acids', kcal: result.calAA, color: '#1a6fc4' },
+    { name: 'Amino Acids', kcal: result.calAA, color: '#3E8A95' },
     { name: 'Intralipid',  kcal: result.calIL, color: '#b45309' },
-    { name: 'Dextrose',    kcal: result.calDx, color: '#6d28d9' },
+    { name: 'Dextrose',    kcal: result.calDx, color: '#21335E' },
   ] : [];
 
   return (
@@ -287,7 +287,7 @@ export default function CalculatorPage() {
             {/* Action buttons + Save */}
             <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end', marginTop: 16, flexWrap: 'wrap', alignItems: 'center' }}>
               {saveStatus !== 'idle' && (
-                <span style={{ fontSize: 13, color: saveStatus === 'saved' ? '#15803d' : saveStatus === 'error' ? '#dc2626' : '#6b7280', marginRight: 8 }}>
+                <span style={{ fontSize: 13, color: saveStatus === 'saved' ? '#15803D' : saveStatus === 'error' ? '#DC2626' : '#64748B', marginRight: 8 }}>
                   {saveStatus === 'saving' ? 'Saving…' : saveMsg}
                 </span>
               )}
@@ -295,7 +295,7 @@ export default function CalculatorPage() {
                 className="btn-ordertable"
                 onClick={handleSave}
                 disabled={saveStatus === 'saving'}
-                style={{ background: '#15803d', borderColor: '#15803d' }}
+                style={{ background: '#15803D', borderColor: '#15803D' }}
               >
                 💾 Save to MRN
               </button>
@@ -313,17 +313,17 @@ export default function CalculatorPage() {
               </thead>
               <tbody>
                 <tr>
-                  <td className="name-cell"><span className="row-icon" style={{ background: '#e8f1fb', color: '#1a6fc4' }}>💧</span><strong>Amino Acids</strong></td>
+                  <td className="name-cell"><span className="row-icon" style={{ background: '#D9ECEE', color: '#3E8A95' }}>💧</span><strong>Amino Acids</strong></td>
                   <td>{fmt(result.AA_DOSE, 1)} g/kg/day</td><td>10% Trophamine</td>
                   <td>{fmt(result.aaVol, 1)} ml</td><td>{fmt(result.aaHr, 2)} ml/hr</td><td>{fmt(result.aaGrams, 1)} g</td>
                 </tr>
                 <tr>
-                  <td className="name-cell"><span className="row-icon" style={{ background: '#ede9fe', color: '#6d28d9' }}>🍬</span><strong>Dextrose</strong></td>
+                  <td className="name-cell"><span className="row-icon" style={{ background: '#DCE2EE', color: '#21335E' }}>🍬</span><strong>Dextrose</strong></td>
                   <td>{fmt(result.gir, 2)} mg/kg/min</td><td>—</td>
                   <td>{fmt(result.dxVol, 1)} ml</td><td>{fmt(result.dxHr, 2)} ml/hr</td><td>{fmt(result.dxGrams, 2)} g</td>
                 </tr>
-                <tr style={{ background: '#e8f1fb', fontWeight: 700 }}>
-                  <td className="name-cell"><span className="row-icon" style={{ background: '#1a6fc4', color: '#fff' }}>+</span><strong>TPN</strong></td>
+                <tr style={{ background: '#D9ECEE', fontWeight: 700 }}>
+                  <td className="name-cell"><span className="row-icon" style={{ background: '#3E8A95', color: '#fff' }}>+</span><strong>TPN</strong></td>
                   <td>—</td><td>D{fmt(result.dxConc, 1)}W ({fmt(result.dxConc, 1)}%)</td>
                   <td>{fmt(result.combinedVol, 1)} ml</td><td>{fmt(result.combinedHr, 2)} ml/hr</td><td>—</td>
                 </tr>
@@ -332,8 +332,8 @@ export default function CalculatorPage() {
                   <td>{fmt(result.IL_DOSE, 1)} g/kg/day</td><td>20% Intralipid</td>
                   <td>{fmt(result.ilVol, 1)} ml</td><td>{fmt(result.ilHr, 2)} ml/hr</td><td>{fmt(result.ilGrams, 1)} g</td>
                 </tr>
-                <tr style={{ background: '#f9fafb', fontWeight: 700 }}>
-                  <td className="name-cell"><span className="row-icon" style={{ background: '#e6f4ee', color: '#1a8754' }}>Σ</span><strong>Total</strong></td>
+                <tr style={{ background: '#F8FAFC', fontWeight: 700 }}>
+                  <td className="name-cell"><span className="row-icon" style={{ background: '#DCFCE7', color: '#15803D' }}>Σ</span><strong>Total</strong></td>
                   <td>{fmt(result.fluid, 0)} ml/kg/day</td><td>—</td>
                   <td>{fmt(result.totalVol, 1)} ml</td><td>{fmt(result.totalHr, 2)} ml/hr</td>
                   <td>{fmt(result.aaGrams + result.ilGrams + result.dxGrams, 1)} g</td>
@@ -384,7 +384,7 @@ export default function CalculatorPage() {
             })}
             <div className="cal-row" style={{ fontWeight: 700 }}>
               <span className="cal-name">Total</span>
-              <div className="cal-bar-wrap"><div className="cal-bar" style={{ width: '100%', background: '#374151' }} /></div>
+              <div className="cal-bar-wrap"><div className="cal-bar" style={{ width: '100%', background: '#334155' }} /></div>
               <span className="cal-val">{fmt(result.calTot, 0)} kcal</span>
             </div>
             <div style={{ fontSize: 12, color: '#6b7280', marginTop: 8 }}>
@@ -406,8 +406,8 @@ export default function CalculatorPage() {
       <div className="signoff">
         <div className="signoff-inner">
           <div style={{ fontSize: 12, color: '#6b7280' }}>Done and reviewed by</div>
-          <div style={{ fontSize: 15, fontWeight: 700, color: '#111827', marginTop: 3 }}>Dr Ahmed Hussain Buzaid</div>
-          <div style={{ fontSize: 12, fontWeight: 500, color: '#1a6fc4', marginTop: 2 }}>Neonatology Consultant</div>
+          <div style={{ fontSize: 15, fontWeight: 700, color: '#21335E', marginTop: 3 }}>Dr Ahmed Hussain Buzaid</div>
+          <div style={{ fontSize: 12, fontWeight: 500, color: '#3E8A95', marginTop: 2 }}>Neonatology Consultant</div>
         </div>
       </div>
 

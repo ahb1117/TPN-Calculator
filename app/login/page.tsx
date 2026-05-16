@@ -129,23 +129,23 @@ export default function LoginPage() {
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, margin: '14px 0' }}>
-              <label style={{ display: 'flex', alignItems: 'flex-start', gap: 10, cursor: 'pointer', fontSize: 13, color: '#374151', lineHeight: 1.5 }}>
+              <label style={{ display: 'flex', alignItems: 'flex-start', gap: 10, cursor: 'pointer', fontSize: 13, color: '#334155', lineHeight: 1.5 }}>
                 <input
                   type="checkbox"
                   checked={rAgree1}
                   onChange={e => setRAgree1(e.target.checked)}
-                  style={{ marginTop: 2, accentColor: '#1a6fc4', width: 16, height: 16, flexShrink: 0, cursor: 'pointer' }}
+                  style={{ marginTop: 2, accentColor: '#3E8A95', width: 16, height: 16, flexShrink: 0, cursor: 'pointer' }}
                 />
                 <span>
                   I confirm that I am trained and competent in writing <strong>neonatal parenteral nutrition</strong> orders.
                 </span>
               </label>
-              <label style={{ display: 'flex', alignItems: 'flex-start', gap: 10, cursor: 'pointer', fontSize: 13, color: '#374151', lineHeight: 1.5 }}>
+              <label style={{ display: 'flex', alignItems: 'flex-start', gap: 10, cursor: 'pointer', fontSize: 13, color: '#334155', lineHeight: 1.5 }}>
                 <input
                   type="checkbox"
                   checked={rAgree2}
                   onChange={e => setRAgree2(e.target.checked)}
-                  style={{ marginTop: 2, accentColor: '#1a6fc4', width: 16, height: 16, flexShrink: 0, cursor: 'pointer' }}
+                  style={{ marginTop: 2, accentColor: '#3E8A95', width: 16, height: 16, flexShrink: 0, cursor: 'pointer' }}
                 />
                 <span>
                   I understand that I am using this calculator <strong>at my own risk</strong> and will always independently verify all calculations before clinical use.
@@ -180,8 +180,8 @@ export default function LoginPage() {
       <div className="signoff">
         <div className="signoff-inner">
           <div style={{ fontSize: 12, color: '#6b7280' }}>Done and reviewed by</div>
-          <div style={{ fontSize: 15, fontWeight: 700, color: '#111827', marginTop: 3 }}>Dr Ahmed Hussain Buzaid</div>
-          <div style={{ fontSize: 12, fontWeight: 500, color: '#1a6fc4', marginTop: 2 }}>Neonatology Consultant</div>
+          <div style={{ fontSize: 15, fontWeight: 700, color: '#21335E', marginTop: 3 }}>Dr Ahmed Hussain Buzaid</div>
+          <div style={{ fontSize: 12, fontWeight: 500, color: '#3E8A95', marginTop: 2 }}>Neonatology Consultant</div>
         </div>
       </div>
     </div>

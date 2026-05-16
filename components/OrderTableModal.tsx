@@ -56,7 +56,7 @@ export default function OrderTableModal({ open, onClose, data: d }: Props) {
         <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 16 }}>
           <button
             onClick={() => window.print()}
-            style={{ background: '#f3f4f6', border: '1px solid #d1d5db', borderRadius: 7, padding: '7px 16px', fontSize: 12, fontWeight: 600, color: '#374151', cursor: 'pointer' }}
+            style={{ background: '#F1F5F9', border: '1px solid #E2E8F0', borderRadius: 7, padding: '7px 16px', fontSize: 12, fontWeight: 600, color: '#334155', cursor: 'pointer' }}
           >
             🖨️ Print
           </button>

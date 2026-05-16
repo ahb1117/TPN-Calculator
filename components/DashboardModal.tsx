@@ -20,8 +20,8 @@ ChartJS.register(
   ChartDataLabels,
 );
 
-const BLUE = '#1a6fc4', AMBER = '#b45309', PURPLE = '#6d28d9',
-      GREEN = '#1a8754', TEAL = '#0f766e', RED = '#b91c1c';
+const BLUE = '#3E8A95', AMBER = '#b45309', PURPLE = '#21335E',
+      GREEN = '#15803D', TEAL = '#3E8A95', RED = '#DC2626';
 
 interface Props { open: boolean; onClose: () => void; data: TPNData | null; }
 
@@ -68,7 +68,7 @@ export default function DashboardModal({ open, onClose, data: d }: Props) {
                 indexAxis: 'y',
                 plugins: {
                   legend: { display: false },
-                  datalabels: { anchor: 'end', align: 'end', formatter: (v: number) => v.toFixed(1) + ' ml', font: { weight: 'bold', size: 12 }, color: '#374151' },
+                  datalabels: { anchor: 'end', align: 'end', formatter: (v: number) => v.toFixed(1) + ' ml', font: { weight: 'bold', size: 12 }, color: '#334155' },
                 },
                 scales: { x: { beginAtZero: true, ticks: { callback: (v) => v + ' ml' } }, y: { grid: { display: false } } },
                 layout: { padding: { right: 60 } },
@@ -87,7 +87,7 @@ export default function DashboardModal({ open, onClose, data: d }: Props) {
               options={{
                 plugins: {
                   legend: { display: false },
-                  datalabels: { anchor: 'end', align: 'end', formatter: (v: number) => v.toFixed(0) + ' kcal', font: { weight: 'bold', size: 11 }, color: '#374151' },
+                  datalabels: { anchor: 'end', align: 'end', formatter: (v: number) => v.toFixed(0) + ' kcal', font: { weight: 'bold', size: 11 }, color: '#334155' },
                 },
                 scales: { y: { beginAtZero: true }, x: { grid: { display: false } } },
                 layout: { padding: { top: 24 } },
@@ -153,7 +153,7 @@ export default function DashboardModal({ open, onClose, data: d }: Props) {
             <Bar
               data={{
                 labels: ['Calcium', 'Phosphorus', 'Magnesium'],
-                datasets: [{ label: 'Total/day', data: [d.ca*d.W, (d.phos + d.naph + d.kph)*d.W, d.mg*d.W], backgroundColor: [PURPLE, '#7c3aed', '#a78bfa'], borderRadius: 5 }],
+                datasets: [{ label: 'Total/day', data: [d.ca*d.W, (d.phos + d.naph + d.kph)*d.W, d.mg*d.W], backgroundColor: [PURPLE, '#3A4D78', '#8A98B8'], borderRadius: 5 }],
               }}
               options={{
                 indexAxis: 'y',

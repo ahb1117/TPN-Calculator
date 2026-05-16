@@ -110,7 +110,7 @@ export default function HistoryPage() {
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <div>
                   <span style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.07em', color: '#9ca3af' }}>MRN</span>
-                  <span style={{ fontSize: 22, fontWeight: 800, color: '#111827', marginLeft: 8 }}>{mrn}</span>
+                  <span style={{ fontSize: 22, fontWeight: 800, color: '#21335E', marginLeft: 8 }}>{mrn}</span>
                 </div>
                 <span style={{ fontSize: 12, color: '#6b7280', background: '#f3f4f6', borderRadius: 999, padding: '3px 10px' }}>
                   {calcRows.length} saved
@@ -121,9 +121,9 @@ export default function HistoryPage() {
                 <button
                   onClick={() => toggleShown(mrn)}
                   style={{
-                    background: isShown ? '#1a6fc4' : '#fff',
-                    color: isShown ? '#fff' : '#1a6fc4',
-                    border: '1.5px solid #1a6fc4',
+                    background: isShown ? '#3E8A95' : '#fff',
+                    color: isShown ? '#fff' : '#3E8A95',
+                    border: '1.5px solid #3E8A95',
                     borderRadius: 8,
                     padding: '7px 16px',
                     fontSize: 13,
@@ -150,8 +150,8 @@ export default function HistoryPage() {
       <div className="signoff">
         <div className="signoff-inner">
           <div style={{ fontSize: 12, color: '#6b7280' }}>Done and reviewed by</div>
-          <div style={{ fontSize: 15, fontWeight: 700, color: '#111827', marginTop: 3 }}>Dr Ahmed Hussain Buzaid</div>
-          <div style={{ fontSize: 12, fontWeight: 500, color: '#1a6fc4', marginTop: 2 }}>Neonatology Consultant</div>
+          <div style={{ fontSize: 15, fontWeight: 700, color: '#21335E', marginTop: 3 }}>Dr Ahmed Hussain Buzaid</div>
+          <div style={{ fontSize: 12, fontWeight: 500, color: '#3E8A95', marginTop: 2 }}>Neonatology Consultant</div>
         </div>
       </div>
     </div>
@@ -171,9 +171,9 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
-function Chip({ label, value, color = '#1a6fc4', unit = '' }: { label: string; value: string | number; color?: string; unit?: string }) {
+function Chip({ label, value, color = '#3E8A95', unit = '' }: { label: string; value: string | number; color?: string; unit?: string }) {
   return (
-    <div style={{ background: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: 10, padding: '10px 12px' }}>
+    <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: 10, padding: '10px 12px' }}>
       <div style={{ fontSize: 10, color: '#9ca3af', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.06em' }}>{label}</div>
       <div style={{ fontSize: 16, fontWeight: 800, color, marginTop: 3 }}>
         {value}<span style={{ fontSize: 11, fontWeight: 500, color: '#9ca3af', marginLeft: 3 }}>{unit}</span>
@@ -189,40 +189,40 @@ function LastTPNDetail({ row }: { row: { mrn: string; results: TPNData; createdA
   return (
     <div>
       <Section title="Patient & Fluids">
-        <Chip label="MRN"              value={row.mrn}                        color="#111827" />
-        <Chip label="Weight"           value={fmt(W, 2)}                      color="#111827"  unit="kg" />
-        <Chip label="TFI"              value={fmt(r.fluid, 0)}                color="#1a6fc4"  unit="ml/kg/day" />
-        <Chip label="Total Volume"     value={fmt(r.totalVol, 1)}             color="#1a6fc4"  unit="ml/day" />
-        <Chip label="TPN Rate"         value={fmt(r.combinedHr, 2)}           color="#1a6fc4"  unit="ml/hr" />
+        <Chip label="MRN"              value={row.mrn}                        color="#21335E" />
+        <Chip label="Weight"           value={fmt(W, 2)}                      color="#21335E"  unit="kg" />
+        <Chip label="TFI"              value={fmt(r.fluid, 0)}                color="#3E8A95"  unit="ml/kg/day" />
+        <Chip label="Total Volume"     value={fmt(r.totalVol, 1)}             color="#3E8A95"  unit="ml/day" />
+        <Chip label="TPN Rate"         value={fmt(r.combinedHr, 2)}           color="#3E8A95"  unit="ml/hr" />
         <Chip label="IL Rate"          value={fmt(r.ilHr, 2)}                 color="#b45309"  unit="ml/hr" />
       </Section>
 
       <Section title="Macronutrients (per kg/day)">
-        <Chip label="Amino Acid"       value={fmt(r.AA_DOSE, 1)}              color="#1a6fc4"  unit="g/kg/day" />
+        <Chip label="Amino Acid"       value={fmt(r.AA_DOSE, 1)}              color="#3E8A95"  unit="g/kg/day" />
         <Chip label="Intralipid"       value={fmt(r.IL_DOSE, 1)}              color="#b45309"  unit="g/kg/day" />
-        <Chip label="GIR"              value={fmt(r.gir, 2)}                  color="#6d28d9"  unit="mg/kg/min" />
-        <Chip label="Dextrose Conc."   value={`D${fmt(r.dxConc, 1)}W`}       color="#6d28d9" />
-        <Chip label="Total kcal/kg/d"  value={fmt(r.calTot / W, 0)}          color="#b91c1c"  unit="kcal" />
+        <Chip label="GIR"              value={fmt(r.gir, 2)}                  color="#21335E"  unit="mg/kg/min" />
+        <Chip label="Dextrose Conc."   value={`D${fmt(r.dxConc, 1)}W`}       color="#21335E" />
+        <Chip label="Total kcal/kg/d"  value={fmt(r.calTot / W, 0)}          color="#DC2626"  unit="kcal" />
       </Section>
 
       <Section title="Electrolytes & Minerals (per kg/day)">
-        <Chip label="NaCl"             value={fmt(r.nacl, 1)}                 color="#0f766e"  unit="mEq/kg/day" />
-        <Chip label="Na Acetate"       value={fmt(r.naac, 1)}                 color="#0f766e"  unit="mEq/kg/day" />
-        <Chip label="Na Phosphate"     value={fmt(r.naph, 1)}                 color="#0f766e"  unit="mmol/kg/day" />
-        <Chip label="KCl"              value={fmt(r.kcl, 1)}                  color="#7c3aed"  unit="mEq/kg/day" />
-        <Chip label="K Phosphate"      value={fmt(r.kph, 1)}                  color="#7c3aed"  unit="mmol/kg/day" />
+        <Chip label="NaCl"             value={fmt(r.nacl, 1)}                 color="#3E8A95"  unit="mEq/kg/day" />
+        <Chip label="Na Acetate"       value={fmt(r.naac, 1)}                 color="#3E8A95"  unit="mEq/kg/day" />
+        <Chip label="Na Phosphate"     value={fmt(r.naph, 1)}                 color="#3E8A95"  unit="mmol/kg/day" />
+        <Chip label="KCl"              value={fmt(r.kcl, 1)}                  color="#21335E"  unit="mEq/kg/day" />
+        <Chip label="K Phosphate"      value={fmt(r.kph, 1)}                  color="#21335E"  unit="mmol/kg/day" />
         <Chip label="Ca Gluconate"     value={fmt(r.ca, 1)}                   color="#b45309"  unit="mEq/kg/day" />
         <Chip label="Phosphate"        value={fmt(r.phos, 1)}                 color="#b45309"  unit="mmol/kg/day" />
-        <Chip label="Mg Sulfate"       value={fmt(r.mg, 1)}                   color="#0891b2"  unit="mEq/kg/day" />
+        <Chip label="Mg Sulfate"       value={fmt(r.mg, 1)}                   color="#3E8A95"  unit="mEq/kg/day" />
       </Section>
 
       <Section title="Daily Totals">
-        <Chip label="Total Na"         value={fmt(r.totalNa, 2)}              color="#0f766e"  unit="mEq/day" />
-        <Chip label="Total K"          value={fmt(r.totalK, 2)}               color="#7c3aed"  unit="mEq/day" />
-        <Chip label="Amino Acids"      value={fmt(r.aaGrams, 1)}              color="#1a6fc4"  unit="g/day" />
+        <Chip label="Total Na"         value={fmt(r.totalNa, 2)}              color="#3E8A95"  unit="mEq/day" />
+        <Chip label="Total K"          value={fmt(r.totalK, 2)}               color="#21335E"  unit="mEq/day" />
+        <Chip label="Amino Acids"      value={fmt(r.aaGrams, 1)}              color="#3E8A95"  unit="g/day" />
         <Chip label="Intralipid"       value={fmt(r.ilGrams, 1)}              color="#b45309"  unit="g/day" />
-        <Chip label="Dextrose"         value={fmt(r.dxGrams, 2)}              color="#6d28d9"  unit="g/day" />
-        <Chip label="Total kcal"       value={fmt(r.calTot, 0)}               color="#b91c1c"  unit="kcal/day" />
+        <Chip label="Dextrose"         value={fmt(r.dxGrams, 2)}              color="#21335E"  unit="g/day" />
+        <Chip label="Total kcal"       value={fmt(r.calTot, 0)}               color="#DC2626"  unit="kcal/day" />
       </Section>
     </div>
   );
