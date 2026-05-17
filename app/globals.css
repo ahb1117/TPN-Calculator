@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 :root {
@@ -24,7 +24,7 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'JetBrains Mono', monospace;
   background: var(--bg);
   color: var(--gray);
   min-height: 100vh;
@@ -36,7 +36,7 @@ body {
 .badge { display: inline-block; color: #fff; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; margin-bottom: 10px; }
 .badge-blue   { background: var(--blue); }
 .badge-purple { background: var(--purple); }
-.site-header h1 { font-family: 'Montserrat', system-ui, sans-serif; font-size: 26px; font-weight: 700; color: var(--navy); }
+.site-header h1 { font-family: 'JetBrains Mono', monospace; font-size: 26px; font-weight: 700; color: var(--navy); }
 .site-header p  { font-size: 13px; color: #64748B; margin-top: 4px; }
 
 /* ── Auth bar ── */
@@ -137,7 +137,7 @@ tbody td:not(:first-child) { text-align: right; font-weight: 500; font-family: '
 .modal-overlay.open { display: flex; }
 .modal { background: #fff; border-radius: 14px; max-width: 680px; width: 100%; max-height: 88vh; overflow-y: auto; box-shadow: var(--shadow-lg); padding: 28px; }
 .modal-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
-.modal-header h3 { font-family: 'Montserrat', system-ui, sans-serif; font-size: 17px; font-weight: 700; color: var(--navy); }
+.modal-header h3 { font-family: 'JetBrains Mono', monospace; font-size: 17px; font-weight: 700; color: var(--navy); }
 .modal-header p  { font-size: 12px; color: #64748B; margin-top: 3px; }
 .modal-close { flex-shrink: 0; background: #F1F5F9; border: none; border-radius: 999px; width: 30px; height: 30px; font-size: 16px; cursor: pointer; color: #64748B; display: flex; align-items: center; justify-content: center; }
 .modal-close:hover { background: var(--border); }
@@ -154,7 +154,7 @@ tbody td:not(:first-child) { text-align: right; font-weight: 500; font-family: '
 .dash-overlay.open { display: flex; }
 .dash-modal { background: #fff; border-radius: 16px; max-width: 860px; width: 100%; box-shadow: var(--shadow-lg); padding: 28px; margin: auto; }
 .dash-modal-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
-.dash-modal-header h3 { font-family: 'Montserrat', system-ui, sans-serif; font-size: 18px; font-weight: 700; color: var(--navy); }
+.dash-modal-header h3 { font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 700; color: var(--navy); }
 .dash-modal-header p  { font-size: 12px; color: #64748B; margin-top: 3px; }
 .dash-kpi-strip { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); gap: 10px; margin-bottom: 20px; }
 .dash-kpi { background: #F8FAFC; border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
@@ -165,7 +165,7 @@ tbody td:not(:first-child) { text-align: right; font-weight: 500; font-family: '
 .dash-card h4 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: #64748B; margin-bottom: 10px; }
 .ot-modal { background: #fff; border-radius: 16px; max-width: 520px; width: 100%; box-shadow: var(--shadow-lg); padding: 28px; margin: auto; }
 .ot-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
-.ot-header h3 { font-family: 'Montserrat', system-ui, sans-serif; font-size: 17px; font-weight: 700; color: var(--navy); }
+.ot-header h3 { font-family: 'JetBrains Mono', monospace; font-size: 17px; font-weight: 700; color: var(--navy); }
 .ot-header p  { font-size: 12px; color: #64748B; margin-top: 3px; }
 .ot-section { margin-bottom: 20px; }
 .ot-section-title { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; color: #fff; background: var(--navy); padding: 5px 12px; border-radius: 6px; }
@@ -209,7 +209,7 @@ tbody td:not(:first-child) { text-align: right; font-weight: 500; font-family: '
 /* ── Admin dashboard ── */
 .admin-page { padding: 24px 16px 48px; }
 .topbar { max-width: 900px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
-.topbar-title { font-family: 'Montserrat', system-ui, sans-serif; font-size: 18px; font-weight: 700; color: var(--navy); display: flex; align-items: center; gap: 8px; }
+.topbar-title { font-family: 'JetBrains Mono', monospace; font-size: 18px; font-weight: 700; color: var(--navy); display: flex; align-items: center; gap: 8px; }
 .btn-refresh { background: none; border: 1.5px solid var(--border); border-radius: 999px; padding: 4px 14px; font-size: 12px; font-weight: 600; color: var(--blue); cursor: pointer; transition: background .15s; }
 .btn-refresh:hover { background: var(--blue-lt); }
 .stats-strip { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); gap: 10px; max-width: 900px; margin: 0 auto 20px; }
@@ -248,7 +248,7 @@ tbody td:not(:first-child) { text-align: right; font-weight: 500; font-family: '
 .btn-restore:hover { background: #B3D9DD; }
 .date-cell { font-size: 11px; color: #94A3B8; }
 .login-card { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 28px; width: 100%; max-width: 400px; box-shadow: var(--shadow-md); }
-.login-card h2 { font-family: 'Montserrat', system-ui, sans-serif; font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 20px; }
+.login-card h2 { font-family: 'JetBrains Mono', monospace; font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 20px; }
 
 @media (max-width: 520px) {
   .site-header h1 { font-size: 20px; }
