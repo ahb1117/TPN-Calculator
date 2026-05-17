@@ -307,44 +307,47 @@ export default function CalculatorPage() {
           {/* Macronutrient breakdown */}
           <div className="card">
             <h2>Macronutrient Breakdown</h2>
-            <table>
-              <thead>
-                <tr><th>Component</th><th>Dose</th><th>Solution</th><th>Volume/day</th><th>Volume/hr</th><th>Grams/day</th></tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className="name-cell"><span className="row-icon" style={{ background: '#D9ECEE', color: '#3E8A95' }}>💧</span><strong>Amino Acids</strong></td>
-                  <td>{fmt(result.AA_DOSE, 1)} g/kg/day</td><td>10% Trophamine</td>
-                  <td>{fmt(result.aaVol, 1)} ml</td><td>{fmt(result.aaHr, 2)} ml/hr</td><td>{fmt(result.aaGrams, 1)} g</td>
-                </tr>
-                <tr>
-                  <td className="name-cell"><span className="row-icon" style={{ background: '#DCE2EE', color: '#21335E' }}>🍬</span><strong>Dextrose</strong></td>
-                  <td>{fmt(result.gir, 2)} mg/kg/min</td><td>—</td>
-                  <td>{fmt(result.dxVol, 1)} ml</td><td>{fmt(result.dxHr, 2)} ml/hr</td><td>{fmt(result.dxGrams, 2)} g</td>
-                </tr>
-                <tr style={{ background: '#D9ECEE', fontWeight: 700 }}>
-                  <td className="name-cell"><span className="row-icon" style={{ background: '#3E8A95', color: '#fff' }}>+</span><strong>TPN</strong></td>
-                  <td>—</td><td>D{fmt(result.dxConc, 1)}W ({fmt(result.dxConc, 1)}%)</td>
-                  <td>{fmt(result.combinedVol, 1)} ml</td><td>{fmt(result.combinedHr, 2)} ml/hr</td><td>—</td>
-                </tr>
-                <tr>
-                  <td className="name-cell"><span className="row-icon" style={{ background: '#fef3c7', color: '#b45309' }}>🟡</span><strong>Intralipid</strong></td>
-                  <td>{fmt(result.IL_DOSE, 1)} g/kg/day</td><td>20% Intralipid</td>
-                  <td>{fmt(result.ilVol, 1)} ml</td><td>{fmt(result.ilHr, 2)} ml/hr</td><td>{fmt(result.ilGrams, 1)} g</td>
-                </tr>
-                <tr style={{ background: '#F8FAFC', fontWeight: 700 }}>
-                  <td className="name-cell"><span className="row-icon" style={{ background: '#DCFCE7', color: '#15803D' }}>Σ</span><strong>Total</strong></td>
-                  <td>{fmt(result.fluid, 0)} ml/kg/day</td><td>—</td>
-                  <td>{fmt(result.totalVol, 1)} ml</td><td>{fmt(result.totalHr, 2)} ml/hr</td>
-                  <td>{fmt(result.aaGrams + result.ilGrams + result.dxGrams, 1)} g</td>
-                </tr>
-              </tbody>
-            </table>
+            <div className="table-scroll">
+              <table>
+                <thead>
+                  <tr><th>Component</th><th>Dose</th><th>Solution</th><th>Vol/day</th><th>Vol/hr</th><th>g/day</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="name-cell"><span className="row-icon" style={{ background: '#D9ECEE', color: '#3E8A95' }}>💧</span><strong>Amino Acids</strong></td>
+                    <td>{fmt(result.AA_DOSE, 1)} g/kg/d</td><td>10% Trophamine</td>
+                    <td>{fmt(result.aaVol, 1)} ml</td><td>{fmt(result.aaHr, 2)} ml/hr</td><td>{fmt(result.aaGrams, 1)} g</td>
+                  </tr>
+                  <tr>
+                    <td className="name-cell"><span className="row-icon" style={{ background: '#DCE2EE', color: '#21335E' }}>🍬</span><strong>Dextrose</strong></td>
+                    <td>{fmt(result.gir, 2)} mg/kg/min</td><td>—</td>
+                    <td>{fmt(result.dxVol, 1)} ml</td><td>{fmt(result.dxHr, 2)} ml/hr</td><td>{fmt(result.dxGrams, 2)} g</td>
+                  </tr>
+                  <tr style={{ background: '#D9ECEE', fontWeight: 700 }}>
+                    <td className="name-cell"><span className="row-icon" style={{ background: '#3E8A95', color: '#fff' }}>+</span><strong>TPN</strong></td>
+                    <td>—</td><td>D{fmt(result.dxConc, 1)}W ({fmt(result.dxConc, 1)}%)</td>
+                    <td>{fmt(result.combinedVol, 1)} ml</td><td>{fmt(result.combinedHr, 2)} ml/hr</td><td>—</td>
+                  </tr>
+                  <tr>
+                    <td className="name-cell"><span className="row-icon" style={{ background: '#fef3c7', color: '#b45309' }}>🟡</span><strong>Intralipid</strong></td>
+                    <td>{fmt(result.IL_DOSE, 1)} g/kg/d</td><td>20% Intralipid</td>
+                    <td>{fmt(result.ilVol, 1)} ml</td><td>{fmt(result.ilHr, 2)} ml/hr</td><td>{fmt(result.ilGrams, 1)} g</td>
+                  </tr>
+                  <tr style={{ background: '#F8FAFC', fontWeight: 700 }}>
+                    <td className="name-cell"><span className="row-icon" style={{ background: '#DCFCE7', color: '#15803D' }}>Σ</span><strong>Total</strong></td>
+                    <td>{fmt(result.fluid, 0)} ml/kg/d</td><td>—</td>
+                    <td>{fmt(result.totalVol, 1)} ml</td><td>{fmt(result.totalHr, 2)} ml/hr</td>
+                    <td>{fmt(result.aaGrams + result.ilGrams + result.dxGrams, 1)} g</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
 
           {/* Electrolytes */}
           <div className="card">
             <h2>Electrolytes</h2>
+            <div className="table-scroll">
             <table>
               <thead><tr><th>Electrolyte</th><th>Dose (per kg/day)</th><th>Total/day</th><th>Unit</th></tr></thead>
               <tbody>
@@ -367,6 +370,7 @@ export default function CalculatorPage() {
                 })}
               </tbody>
             </table>
+            </div>
           </div>
 
           {/* Caloric breakdown */}
